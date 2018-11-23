@@ -180,3 +180,18 @@ function client.update(dt)
     local w, h = love.graphics.getDimensions()
     DISPLAY_SCALE = math.min(1, w / W, h / H)
 end
+
+-- Quick hack to try local overrides for player input -- will test this more
+function client.changing(diff)
+    if diff.triangles then
+        local myTri = diff.triangles[client.id]
+        if myTri then
+            if myTri.x and share.triangles[client.id].x then
+                myTri.x = 0.98 * share.triangles[client.id].x + 0.02 * myTri.x
+            end
+            if myTri.y and share.triangles[client.id].y then
+                myTri.y = 0.98 * share.triangles[client.id].y + 0.02 * myTri.y
+            end
+        end
+    end
+end
