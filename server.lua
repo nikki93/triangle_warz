@@ -32,8 +32,27 @@ function server.disconnect(id)
 end
 
 function server.update(dt)
-    for id, home in pairs(homes) do
-        local tri = share.triangles[id]
-        tri.targetX, tri.targetY = home.targetX, home.targetY
+    -- Update triangles
+    for id, tri in pairs(share.triangles) do
+        local home = homes[id]
+        if home.move then -- Info may have not arrived yet
+            -- Set target
+            tri.targetX, tri.targetY = home.targetX, home.targetY
+
+            -- Move
+            local move = home.move
+            local vx, vy = 0, 0
+            if move.up then vy = vy - 220 end
+            if move.down then vy = vy + 220 end
+            if move.left then vx = vx - 220 end
+            if move.right then vx = vx + 220 end
+            local vLen = math.sqrt(vx * vx + vy * vy)
+            if vLen > 0 then vx, vy = 220 * vx / vLen, 220 * vy / vLen end -- Limit speed
+            tri.x, tri.y = tri.x + vx * dt, tri.y + vy * dt
+            if tri.x < 0 then tri.x = tri.x + W end
+            if tri.x > W then tri.x = tri.x - W end
+            if tri.y < 0 then tri.y = tri.y + H end
+            if tri.y > H then tri.y = tri.y - H end
+        end
     end
 end

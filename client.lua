@@ -11,8 +11,10 @@ local share = client.share
 local home = client.home
 
 function client.load()
+    -- We use `home` to send control info
     home.targetX, home.targetY = 0, 0
     home.wantShoot = false
+    home.move = { up = false, down = false, left = false, right = false }
 end
 
 function client.mousemoved(x, y)
@@ -32,6 +34,20 @@ function client.mousereleased(x, y, button)
     if button == 1 then
         home.wantShoot = false
     end
+end
+
+function client.keypressed(k)
+    if k == 'w' then home.move.up = true end
+    if k == 's' then home.move.down = true end
+    if k == 'a' then home.move.left = true end
+    if k == 'd' then home.move.right = true end
+end
+
+function client.keyreleased(k)
+    if k == 'w' then home.move.up = false end
+    if k == 's' then home.move.down = false end
+    if k == 'a' then home.move.left = false end
+    if k == 'd' then home.move.right = false end
 end
 
 function client.draw()
