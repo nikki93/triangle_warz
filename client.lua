@@ -4,6 +4,10 @@ local client = cs.client
 local W, H = 800, 600 -- Game world size
 local DISPLAY_SCALE = 1 -- Scale to draw graphics at w.r.t game world units
 
+local bulletSound = love.audio.newSource('assets/laser.wav', 'static')
+local smallExplosionSound = love.audio.newSource('assets/hurt.wav', 'static')
+local bigExplosionSound = love.audio.newSource('assets/explosion.wav', 'static')
+
 client.enabled = true
 client.start('127.0.0.1:22122')
 
@@ -48,6 +52,22 @@ function client.keyreleased(k)
     if k == 's' then home.move.down = false end
     if k == 'a' then home.move.left = false end
     if k == 'd' then home.move.right = false end
+end
+
+function client.receive(message)
+    if message == 'bulletSound' then
+        bulletSound:setPitch(1.4 + 0.3 * math.random())
+        bulletSound:stop()
+        bulletSound:play()
+    elseif message == 'smallExplosionSound' then
+        smallExplosionSound:setPitch(1.4 + 0.3 * math.random())
+        smallExplosionSound:stop()
+        smallExplosionSound:play()
+    elseif message == 'bigExplosionSound' then
+        bigExplosionSound:setPitch(0.7 + 0.3 * math.random())
+        bigExplosionSound:stop()
+        bigExplosionSound:play()
+    end
 end
 
 function client.draw()

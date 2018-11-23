@@ -79,6 +79,7 @@ function server.update(dt)
                 }
                 nextBulletId = nextBulletId + 1
                 tri.shootTimer = 0.2
+                server.send('all', 'bulletSound')
             end
 
             -- Check if we got shot...
@@ -114,6 +115,9 @@ function server.update(dt)
                             if shooterScore then
                                 share.scores[bul.ownerClientId] = shooterScore + 1
                             end
+                            server.send('all', 'bigExplosionSound')
+                        else -- Just got hurt
+                            server.send('all', 'smallExplosionSound')
                         end
                     end
                 end
