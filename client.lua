@@ -9,7 +9,7 @@ local smallExplosionSound = love.audio.newSource('assets/hurt.wav', 'static')
 local bigExplosionSound = love.audio.newSource('assets/explosion.wav', 'static')
 
 client.enabled = true
-client.start('127.0.0.1:22122')
+client.start('207.254.45.246:22122') -- '127.0.0.1:22122' for local server
 
 local share = client.share
 local home = client.home
