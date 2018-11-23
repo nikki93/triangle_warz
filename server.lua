@@ -9,7 +9,7 @@ server.enabled = true
 server.start('22122')
 
 local share = server.share
-local mys = server.homes
+local homes = server.homes
 
 function server.load()
     share.triangles = {}
@@ -17,16 +17,23 @@ function server.load()
 end
 
 function server.connect(id)
-    print('client ' .. id .. ' connected')
+    share.triangles[id] = {
+        x = math.random(0, W),
+        y = math.random(0, H),
+        r = math.random(),
+        g = math.random(),
+        b = math.random(),
+        targetX = 0,
+        targetY = 0,
+    }
 end
 
 function server.disconnect(id)
-    print('client ' .. id .. ' disconnected')
 end
 
 function server.update(dt)
-end
-
-function server.changed(id, diff)
---    print(serpent.block(diff))
+    for id, home in pairs(homes) do
+        local tri = share.triangles[id]
+        tri.targetX, tri.targetY = home.targetX, home.targetY
+    end
 end
