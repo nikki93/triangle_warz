@@ -1,6 +1,8 @@
 require 'libs'
 local server = cs.server
 
+local common = require 'common'
+
 local W, H = 800, 600 -- Game world size
 
 server.enabled = true
@@ -23,6 +25,8 @@ function server.connect(clientId)
         r = math.random(),
         g = math.random(),
         b = math.random(),
+        vx = 0,
+        vy = 0,
         targetX = 0,
         targetY = 0,
         shootTimer = 0, -- Can shoot if <= 0
@@ -43,16 +47,7 @@ function server.update(dt)
         local home = homes[clientId]
         if home.move then -- Info may have not arrived yet
             -- Moving
-            local move = home.move
-            local vx, vy = 0, 0
-            if move.up then vy = vy - 220 end
-            if move.down then vy = vy + 220 end
-            if move.left then vx = vx - 220 end
-            if move.right then vx = vx + 220 end
-            local vLen = math.sqrt(vx * vx + vy * vy)
-            if vLen > 0 then vx, vy = 220 * vx / vLen, 220 * vy / vLen end -- Limit speed
-            tri.x, tri.y = tri.x + vx * dt, tri.y + vy * dt
-            tri.x, tri.y = math.max(0, math.min(tri.x, W)), math.max(0, math.min(tri.y, H))
+            common.move_triangle(tri, dt, home)
 
             -- Targeting
             tri.targetX, tri.targetY = home.targetX, home.targetY
@@ -127,7 +122,7 @@ function server.update(dt)
 
     -- Bullets
     for bulId, bul in pairs(share.bullets) do
-        bul.x, bul.y = bul.x + 800 * bul.dirX * dt, bul.y + 800 * bul.dirY * dt
+        common.move_bullet(bul, dt)
         bul.lifetime = bul.lifetime - dt
         if bul.lifetime <= 0 then
             share.bullets[bulId] = nil

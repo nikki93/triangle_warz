@@ -1,6 +1,8 @@
 require 'libs'
 local client = cs.client
 
+local common = require 'common'
+
 local MOBILE = love.system.getOS() == 'iOS' or love.system.getOS() == 'Android'
 local W, H = 800, 600 -- Game world size
 local DISPLAY_SCALE = 1 -- Scale to draw graphics at w.r.t game world units
@@ -10,7 +12,8 @@ local smallExplosionSound = love.audio.newSource('assets/hurt.wav', 'static')
 local bigExplosionSound = love.audio.newSource('assets/explosion.wav', 'static')
 
 client.enabled = true
-client.start('207.254.45.246:22122') -- '127.0.0.1:22122' for local server
+client.start('207.254.45.246:22122') -- A remote server I test on
+--client.start('127.0.0.1:22122') -- Local server
 
 local share = client.share
 local home = client.home
@@ -143,6 +146,20 @@ function client.draw()
 end
 
 function client.update(dt)
+    -- Do some client-side prediction
+    if client.connected then
+        -- Predictively move triangles
+        for id, tri in pairs(share.triangles) do
+            -- We can use our `home` to apply controls predictively if it's our triangle
+            common.move_triangle(tri, dt, id == client.id and home or nil)
+        end
+
+        -- Predictively move bullets
+        for bulId, bul in pairs(share.bullets) do
+            common.move_bullet(bul, dt)
+        end
+    end
+
     -- Fake key events sent from a mobile app I'm testing this in -- you can ignore this part
     if MOBILE then
         local pressed = love.thread.getChannel('KEY_PRESSED')
