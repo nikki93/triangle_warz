@@ -67,9 +67,9 @@ function client.draw()
         -- Triangles
         for clientId, tri in pairs(share.triangles) do
             love.graphics.push('all')
-
-            -- Position and rotation
             love.graphics.translate(tri.x, tri.y)
+
+            love.graphics.push() -- Push for rotation
             local targetX, targetY
             if clientId == client.id then -- If it's us, use `home` data directly
                 targetX, targetY = home.targetX, home.targetY
@@ -78,14 +78,19 @@ function client.draw()
             end
             love.graphics.rotate(math.atan2(targetY - tri.y, targetX -  tri.x))
 
-            -- Fill
-            love.graphics.setColor(tri.r, tri.g, tri.b)
+            love.graphics.setColor(tri.r, tri.g, tri.b) -- Fill
             love.graphics.polygon('fill', -20, 20, 30, 0, -20, -20)
 
-            -- Outline (thicker if it's us)
-            love.graphics.setColor(1, 1, 1, 0.8)
+            love.graphics.setColor(1, 1, 1, 0.8) -- Outline (thicker if it's us)
             love.graphics.setLineWidth(clientId == client.id and 3 or 1)
             love.graphics.polygon('line', -20, 20, 30, 0, -20, -20)
+
+            love.graphics.pop() -- Pop rotation (don't rotate health bar)
+
+            love.graphics.setColor(0, 0, 0, 0.5) -- Health bar
+            love.graphics.rectangle('fill', -20, -35, 40, 4)
+            love.graphics.setColor(0.933, 0.961, 0.859, 0.5)
+            love.graphics.rectangle('fill', -20, -35, tri.health / 100 * 40, 4)
 
             love.graphics.pop()
         end
@@ -93,18 +98,14 @@ function client.draw()
         -- Bullets
         for _, bul in pairs(share.bullets) do
             love.graphics.push('all')
-
-            -- Position and rotation
             love.graphics.translate(bul.x, bul.y)
             love.graphics.rotate(math.atan2(bul.dirY, bul.dirX))
 
-            -- Fill
-            love.graphics.setColor(bul.r, bul.g, bul.b)
+            love.graphics.setColor(bul.r, bul.g, bul.b) -- Fill
             love.graphics.ellipse('fill', 0, 0, 24, 1)
             love.graphics.setColor(1, 1, 1, 0.38)
 
-            -- Outline
-            love.graphics.setLineWidth(0.3)
+            love.graphics.setLineWidth(0.3) -- Outline
             love.graphics.ellipse('line', 0, 0, 24, 1)
 
             love.graphics.pop()

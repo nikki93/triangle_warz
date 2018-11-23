@@ -110,7 +110,7 @@ function server.update(dt)
                         if tri.health <= 0 then -- We died!
                             tri.health = 100
                             tri.x, tri.y = math.random(10, W - 10), math.random(10, H - 10)
-                            local shooterScore = share.scores[bul.ownerClientId]
+                            local shooterScore = share.scores[bul.ownerClientId] -- Award shooter
                             if shooterScore then
                                 share.scores[bul.ownerClientId] = shooterScore + 1
                             end
