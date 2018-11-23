@@ -1,4 +1,4 @@
-cs = require 'http://127.0.0.1:8000/cs.lua'
+cs = require 'https://raw.githubusercontent.com/expo/share.lua/master/cs.lua'
 
 -- TODO(nikki): Make this work with direct library import...
 
