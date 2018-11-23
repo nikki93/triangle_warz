@@ -1,6 +1,7 @@
 require 'libs'
 local client = cs.client
 
+local MOBILE = love.system.getOS() == 'iOS' or love.system.getOS() == 'Android'
 local W, H = 800, 600 -- Game world size
 local DISPLAY_SCALE = 1 -- Scale to draw graphics at w.r.t game world units
 
@@ -130,6 +131,10 @@ function client.draw()
 
             love.graphics.pop()
         end
+
+        -- FPS, ping
+        love.graphics.print('fps:  ' .. love.timer.getFPS(), 20, H - 36)
+        love.graphics.print('ping: ' .. client.getPing(), 78, H - 36)
     else
         love.graphics.print('not connected', 20, 20)
     end
@@ -137,3 +142,24 @@ function client.draw()
     love.graphics.pop()
 end
 
+function client.update(dt)
+    -- Fake key events sent from a mobile app I'm testing this in -- you can ignore this part
+    if MOBILE then
+        local pressed = love.thread.getChannel('KEY_PRESSED')
+        local released = love.thread.getChannel('KEY_RELEASED')
+        while pressed:getCount() > 0 do
+            local k = pressed:pop()
+            function love.keyboard.isDown(e) return e == k end
+            love.keypressed(k)
+        end
+        while released:getCount() > 0 do
+            local k = released:pop()
+            function love.keyboard.isDown(e) return false end
+            love.keyreleased(k)
+        end
+    end
+
+    -- Scale down display if window is too small
+    local w, h = love.graphics.getDimensions()
+    DISPLAY_SCALE = math.min(1, w / W, h / H)
+end
