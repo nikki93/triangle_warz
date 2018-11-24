@@ -1,4 +1,4 @@
-require 'libs'
+local cs = require 'https://raw.githubusercontent.com/expo/share.lua/de0f1e09fbd4f562fb3adcc00d84bf60c1e48de9/cs.lua'
 local server = cs.server
 
 local common = require 'common'
