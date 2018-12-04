@@ -1,12 +1,13 @@
-local cs = require 'https://raw.githubusercontent.com/expo/share.lua/de0f1e09fbd4f562fb3adcc00d84bf60c1e48de9/cs.lua'
+local cs = require 'https://raw.githubusercontent.com/expo/share.lua/2d850666da9ac1fb32489cf1090547b8b0b9dd4c/cs.lua'
 local server = cs.server
 
 local common = require 'common'
 
 local W, H = 800, 600 -- Game world size
 
-server.enabled = true
-server.start('22122')
+--server.enabled = true
+server.useCastleServer()
+--server.start('22122')
 
 local share = server.share
 local homes = server.homes

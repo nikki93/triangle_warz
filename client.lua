@@ -1,4 +1,4 @@
-local cs = require 'https://raw.githubusercontent.com/expo/share.lua/de0f1e09fbd4f562fb3adcc00d84bf60c1e48de9/cs.lua'
+local cs = require 'https://raw.githubusercontent.com/expo/share.lua/2d850666da9ac1fb32489cf1090547b8b0b9dd4c/cs.lua'
 local client = cs.client
 
 local common = require 'common'
@@ -11,8 +11,9 @@ local bulletSound = love.audio.newSource('assets/laser.wav', 'static')
 local smallExplosionSound = love.audio.newSource('assets/hurt.wav', 'static')
 local bigExplosionSound = love.audio.newSource('assets/explosion.wav', 'static')
 
-client.enabled = true
-client.start('207.254.45.246:22122') -- A remote server I test on
+--client.enabled = true
+client.useCastleServer()
+--client.start('207.254.45.246:22122') -- A remote server I test on
 --client.start('127.0.0.1:22122') -- Local server
 
 local share = client.share
